@@ -12,14 +12,15 @@ Discordサーバー用の募集自動化・管理Botです。<br>
 ## ディレクトリ構成
 
 ```text
-/RECRUIT/
-├── bot/                # メインスクリプト
-│   └── bot.py
-├── data/               # 参加履歴データ (自動生成)
-│   └── participation_log.json
-└── logs/               # 運用ログ (自動生成)
-    ├── bot.log         # 起動ログ
-    └── op.log          # 運用ログ
+/RECRUIT/(プロジェクトルート)
+├── bot/
+│   ├── bot.py             # BOT起動、Discordイベントハンドラ
+│   ├── commands.py        # ユーザーコマンド（申請・取り消し）のロジック
+│   └── requirements.txt   # 必要なライブラリリスト
+├── data/
+│   └── participation_log.json # 永続化データ(JSON)
+└── logs/
+    ├── bot.log            # BOT動作記録（追記モードで7日間保持）
 ```
 
 ## 主な機能

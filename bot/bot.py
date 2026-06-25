@@ -109,14 +109,14 @@ class RecruitmentEmbedView(View):
         if interaction.user in self.participants:
             return await interaction.response.send_message("あなたは既に参加しています。", ephemeral=True)
         self.participants.append(interaction.user)
-        log_participation(interaction.user.name)  # <-- 新機能: 参加記録
+        log_participation(interaction.user.name)
         op_logger.info(f"{interaction.user.name} が参加しました。")
         if self.author.voice and self.author.voice.channel:
             try:
                 await interaction.user.move_to(self.author.voice.channel)
             except discord.HTTPException:
                 pass
-        # 更新: グローバル辞書も更新
+        # 更新: グローバル辞書更新
         key = (self.channel_id, self.author.id)
         if key in active_recruitments:
             active_recruitments[key]["participants"] = [p.id for p in self.participants]
@@ -155,7 +155,7 @@ class RecruitmentEmbedView(View):
         key = (self.channel_id, self.author.id)
         data = active_recruitments.get(key)
         if not data:
-            return await interaction.response.send_message("現在募集中の情報が取得できませんでした。", ephemeral=True)
+            return await interaction.response.send_message("現在、募集中の情報が取得できませんでした。", ephemeral=True)
         if data.get("closed", False):
             return await interaction.response.send_message("この募集は締め切られています。", ephemeral=True)
  
@@ -322,7 +322,7 @@ def build_view_from_dict(channel_id: int, user_id: int, data: dict) -> View:
  
 # ---- 複数のテキストチャンネルに初期メッセージを投稿する関数 ----
 async def post_initial_message():
-    channel_ids = [1498898992015216761,1085856366276640848]
+    channel_ids = [テキストチャンネルIDを記載してください]
     top_view = View(timeout=None)
     button = Button(label="募集する", style=discord.ButtonStyle.green)
  

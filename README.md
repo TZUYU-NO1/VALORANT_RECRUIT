@@ -37,7 +37,7 @@ Discordサーバー用の募集自動化・管理Botです。<br>
 
 ### 1. プロジェクトルートで必要なライブラリをインストール
 ```bash
-pip install discord.py pytz matplotlib
+pip install -r ./bot/requirements.txt
 ```
 ### 2. Botトークンの記述
 ```bash

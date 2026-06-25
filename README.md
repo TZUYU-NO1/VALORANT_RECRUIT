@@ -39,12 +39,21 @@ Discordサーバー用の募集自動化・管理BOTです。<br>
 ```bash
 pip install -r ./bot/requirements.txt
 ```
-### 2. Botトークンの記述
+### 2. IPAフォントの導入
+```bash
+以下のコマンドでIPAフォントを導入します。
+curl -OL https://moji.or.jp/wp-content/ipafont/IPAexfont/IPAexfont00301.zip
+yum -y install unzip
+unzip IPAexfont00301.zip
+mv IPAexfont00301 /usr/share/fonts/
+fc-cache -fv
+```
+### 3. Botトークンの記述
 ```bash
 `bot.py` の末尾にある `bot.run('YOUR_BOT_TOKEN')` の箇所に、
  ご自身のDiscord Botトークンを記述してください。
 ```
-### 3. Botの起動
+### 4. Botの起動
 ```bash
 以下のコマンドでBOTを起動します。
 python3 ./bot/bot.py

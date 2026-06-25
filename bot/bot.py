@@ -9,10 +9,14 @@ import logging
 import traceback
 from logging.handlers import TimedRotatingFileHandler
 import os
-import matplotlib.pyplot as plt
 import io
 from collections import Counter
 import matplotlib.pyplot as plt
+import matplotlib.font_manager
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib.font_manager")
+
+# フォントの設定
 plt.rcParams['font.family'] = 'IPAexGothic'
  
 # --- パス設定とディレクトリの自動作成 ---
@@ -105,7 +109,7 @@ class RecruitmentEmbedView(View):
         if interaction.user in self.participants:
             return await interaction.response.send_message("あなたは既に参加しています。", ephemeral=True)
         self.participants.append(interaction.user)
-        log_participation(interaction.user.name)
+        log_participation(interaction.user.name)  # <-- 新機能: 参加記録
         op_logger.info(f"{interaction.user.name} が参加しました。")
         if self.author.voice and self.author.voice.channel:
             try:
@@ -385,25 +389,52 @@ async def dummy_edit_loop():
 # --- ランキングコマンド (!ranking) ---
 @bot.command()
 async def ranking(ctx):
-    try:
-        now = datetime.datetime.now()
-        # ...集計処理...
-        if not top_10:
-            return await ctx.send("今月のデータがありません。")
+    now = datetime.datetime.now()
+    counts = Counter()
+    log_path = os.path.join(DATA_DIR, 'participation_log.json')
+    
+    # 1. ログファイルから集計
+    if os.path.exists(log_path):
+        with open(log_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                try:
+                    d = json.loads(line)
+                    if d.get('date', '').startswith(now.strftime("%Y-%m")):
+                        counts[d['user']] += 1
+                except json.JSONDecodeError:
+                    continue  # 不正な行があればスキップ
+
+    # 2. 変数の定義と検証
+    top_10 = counts.most_common(10)
+    
+    if not top_10:
+        return await ctx.send("今月のデータがありません。")
         
-        # グラフ作成処理
+    names, values = zip(*top_10)
+    
+    # 3. グラフ生成と送信
+    try:
+        # フォントパスを直接指定
+        font_path = '/usr/share/fonts/IPAexfont00301/ipaexg.ttf'
+        font_prop = matplotlib.font_manager.FontProperties(fname=font_path)
+        
         plt.figure(figsize=(8, 4))
         plt.bar(names, values)
-        plt.title(f"{now.month}月度 参加ランキング")
+        
+        # タイトルと軸ラベルにフォントを適用
+        plt.title(f"{now.month}月度 参加ランキング", fontproperties=font_prop)
+        plt.xticks(fontproperties=font_prop) # x軸のユーザー名用
         
         buf = io.BytesIO()
         plt.savefig(buf, format='png')
         buf.seek(0)
+        
         await ctx.send(file=discord.File(buf, 'ranking.png'))
-        plt.close()
     except Exception as e:
         bot_logger.error(f"ランキング生成エラー: {traceback.format_exc()}")
-        await ctx.send("ランキングの生成中にエラーが発生しました。")
+        await ctx.send("ランキング画像の作成に失敗しました。")
+    finally:
+        plt.close()
  
 # ---- 起動時＆毎日AM0:00に初期メッセージを投稿するタスク ----
 @bot.event

@@ -105,7 +105,7 @@ class RecruitmentEmbedView(View):
         if interaction.user in self.participants:
             return await interaction.response.send_message("あなたは既に参加しています。", ephemeral=True)
         self.participants.append(interaction.user)
-        log_participation(interaction.user.name)  # <-- 新機能: 参加記録
+        log_participation(interaction.user.name)
         op_logger.info(f"{interaction.user.name} が参加しました。")
         if self.author.voice and self.author.voice.channel:
             try:

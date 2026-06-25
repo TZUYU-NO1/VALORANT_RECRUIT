@@ -41,7 +41,8 @@ pip install -r ./bot/requirements.txt
 ```
 ### 2. Botトークンの記述
 ```bash
-`bot.py` の末尾にある `bot.run('YOUR_BOT_TOKEN')` の箇所に、ご自身のDiscord Botトークンを記述してください。
+`bot.py` の末尾にある `bot.run('YOUR_BOT_TOKEN')` の箇所に、
+ ご自身のDiscord Botトークンを記述してください。
 ```
 ### 3. Botの起動
 ```bash

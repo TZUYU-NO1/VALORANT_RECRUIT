@@ -34,14 +34,15 @@ Discordサーバー用の募集自動化・管理Botです。
 pip install discord.py pytz matplotlib
 ```
 ### 2. Botトークンの記述
+```bash
 `bot.py` の末尾にある `bot.run('YOUR_TOKEN')` の箇所に、ご自身のDiscord Botトークンを記述してください。
 ```
 ### 3. Botの起動
-以下のコマンドでBotを起動します。
-```
 ```bash
+以下のコマンドでBotを起動します。
 python3 bot/bot.py
 ```
+
 ## 運用上の注意
 
 ### 1. ログおよびデータフォルダについて

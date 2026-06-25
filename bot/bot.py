@@ -37,7 +37,8 @@ intents = discord.Intents.default()
 intents.message_content = True
  
 bot = commands.Bot(command_prefix='!', intents=intents)
-last_post_date = None  # 毎日AM0:00投稿管理用
+# 毎日AM0:00投稿管理用
+last_post_date = None
  
 # グローバルな募集中管理辞書
 # キー: (channel_id, user_id)
@@ -103,7 +104,7 @@ class RecruitmentEmbedView(View):
             return await interaction.response.send_message("あなたは既に参加しています。", ephemeral=True)
         self.participants.append(interaction.user)
         log_participation(interaction.user.name)  # <-- 新機能: 参加記録
-        op_logger.info(f"{interaction.user.name} が参加しました。")  # <-- 新機能: ログ出力
+        op_logger.info(f"{interaction.user.name} が参加しました。")
         if self.author.voice and self.author.voice.channel:
             try:
                 await interaction.user.move_to(self.author.voice.channel)
@@ -123,7 +124,7 @@ class RecruitmentEmbedView(View):
         if interaction.user not in self.participants:
             return await interaction.response.send_message("あなたは参加していません。", ephemeral=True)
         self.participants.remove(interaction.user)
-        op_logger.info(f"{interaction.user.name} が離脱しました。")  # <-- 新機能: ログ出力
+        op_logger.info(f"{interaction.user.name} が離脱しました。")
         key = (self.channel_id, self.author.id)
         if key in active_recruitments:
             active_recruitments[key]["participants"] = [p.id for p in self.participants]
@@ -135,7 +136,7 @@ class RecruitmentEmbedView(View):
         if interaction.user.id != self.author.id:
             return await interaction.response.send_message("あなたは募集主ではないので締め切る事は出来ません。", ephemeral=True)
         self.closed = True
-        op_logger.info(f"{self.author.name} が募集を締め切りました。")  # <-- 新機能: ログ出力
+        op_logger.info(f"{self.author.name} が募集を締め切りました。")
         await interaction.response.defer()
         await interaction.message.edit(embed=self.make_embed(), view=self)
         await interaction.message.reply("この募集は締め切られました。")
@@ -204,7 +205,7 @@ class RecruitmentModal(Modal):
         embed = view.make_embed()
         await interaction.response.defer()
         message = await interaction.followup.send(embed=embed, view=view, ephemeral=False)
-        op_logger.info(f"{self.author.name} が募集を開始しました。")  # <-- 新機能: ログ出力
+        op_logger.info(f"{self.author.name} が募集を開始しました。")
         key = (self.channel_id, self.author.id)
         active_recruitments[key] = {
             "message_id": message.id,
@@ -274,7 +275,7 @@ def build_view_from_dict(channel_id: int, user_id: int, data: dict) -> View:
         if interaction.user.id != user_id:
             return await interaction.response.send_message("あなたは募集主ではないので締め切る事は出来ません。", ephemeral=True)
         data["closed"] = True
-        op_logger.info(f"{interaction.user.name} が募集を締め切りました。")  # <-- 新機能: ログ出力
+        op_logger.info(f"{interaction.user.name} が募集を締め切りました。")
         await interaction.response.defer()
         new_embed = build_embed_from_dict(data)
         new_view2 = build_view_from_dict(channel_id, user_id, data)

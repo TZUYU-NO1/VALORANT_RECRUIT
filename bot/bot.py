@@ -409,10 +409,11 @@ async def ranking(ctx):
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
+    bot_logger.info("VALORANT RECRUITが起動しました。")
     await post_initial_message()
     daily_post.start()
     dummy_edit_loop.start()
- 
+
 @tasks.loop(minutes=1)
 async def daily_post():
     global last_post_date

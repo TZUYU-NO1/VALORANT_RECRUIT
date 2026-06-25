@@ -35,7 +35,7 @@ pip install discord.py pytz matplotlib
 ```
 ### 2. Botトークンの記述
 ```bash
-`bot.py` の末尾にある `bot.run('YOUR_TOKEN')` の箇所に、ご自身のDiscord Botトークンを記述してください。
+`bot.py` の末尾にある `bot.run('YOUR_BOT_TOKEN')` の箇所に、ご自身のDiscord Botトークンを記述してください。
 ```
 ### 3. Botの起動
 ```bash

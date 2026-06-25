@@ -46,7 +46,7 @@ pip install -r ./bot/requirements.txt
 ### 3. Botの起動
 ```bash
 以下のコマンドでBotを起動します。
-python3 bot/bot.py
+python3 ./bot/bot.py
 ```
 
 ## 運用上の注意

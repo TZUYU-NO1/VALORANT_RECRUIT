@@ -24,7 +24,7 @@ if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
 # --- ログ設定 ---
 def setup_logger(name, log_file):
     handler = TimedRotatingFileHandler(log_file, when="midnight", interval=1, backupCount=7, encoding='utf-8')
-    handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M'))
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
@@ -37,9 +37,7 @@ intents = discord.Intents.default()
 intents.message_content = True
  
 bot = commands.Bot(command_prefix='!', intents=intents)
-
-# 毎日AM0:00投稿管理用
-last_post_date = None
+last_post_date = None  # 毎日AM0:00投稿管理用
  
 # グローバルな募集中管理辞書
 # キー: (channel_id, user_id)

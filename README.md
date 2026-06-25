@@ -1,8 +1,13 @@
 # Discord募集自動化・管理Bot
 
-Discordサーバー用の募集自動化・管理Botです。
-ゲームモード（コンペティティブ、アンレート、カスタム）ごとの
+Discordサーバー用の募集自動化・管理Botです。<br>
+ゲームモード（コンペティティブ、アンレート、カスタム）ごとの<br>
 募集投稿、参加者の管理、運用データの集計・可視化機能を提供します。
+
+
+<img width="498" height="230" alt="Image" src="https://github.com/user-attachments/assets/f01d14e4-e1b6-47c6-b0ef-9da214fc2142" />
+
+
 
 ## ディレクトリ構成
 

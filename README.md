@@ -15,7 +15,6 @@ Discordサーバー用の募集自動化・管理BOTです。<br>
 /RECRUIT/ (プロジェクトルート)
 ├── bot/
 │   ├── bot.py             # BOT起動、Discordイベントハンドラ
-│   ├── commands.py        # ユーザーコマンド（申請・取り消し）のロジック
 │   └── requirements.txt   # 必要なライブラリリスト
 ├── data/
 │   └── participation_log.json　# 永続化データ(JSON)

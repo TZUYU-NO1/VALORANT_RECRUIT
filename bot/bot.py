@@ -12,6 +12,8 @@ import os
 import matplotlib.pyplot as plt
 import io
 from collections import Counter
+import matplotlib.pyplot as plt
+plt.rcParams['font.family'] = 'IPAexGothic'
  
 # --- パス設定とディレクトリの自動作成 ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -103,7 +105,7 @@ class RecruitmentEmbedView(View):
         if interaction.user in self.participants:
             return await interaction.response.send_message("あなたは既に参加しています。", ephemeral=True)
         self.participants.append(interaction.user)
-        log_participation(interaction.user.name)
+        log_participation(interaction.user.name)  # <-- 新機能: 参加記録
         op_logger.info(f"{interaction.user.name} が参加しました。")
         if self.author.voice and self.author.voice.channel:
             try:
@@ -316,7 +318,7 @@ def build_view_from_dict(channel_id: int, user_id: int, data: dict) -> View:
  
 # ---- 複数のテキストチャンネルに初期メッセージを投稿する関数 ----
 async def post_initial_message():
-    channel_ids = ["ここに募集を行うチャンネルIDを記載"]
+    channel_ids = [1498898992015216761,1085856366276640848]
     top_view = View(timeout=None)
     button = Button(label="募集する", style=discord.ButtonStyle.green)
  
@@ -383,27 +385,25 @@ async def dummy_edit_loop():
 # --- ランキングコマンド (!ranking) ---
 @bot.command()
 async def ranking(ctx):
-    now = datetime.datetime.now()
-    counts = Counter()
-    log_path = os.path.join(DATA_DIR, 'participation_log.json')
-    if os.path.exists(log_path):
-        with open(log_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                d = json.loads(line)
-                if d['date'].startswith(now.strftime("%Y-%m")):
-                    counts[d['user']] += 1
-    top_10 = counts.most_common(10)
-    if not top_10:
-        return await ctx.send("今月のデータがありません。")
-    names, values = zip(*top_10)
-    plt.figure(figsize=(8, 4))
-    plt.bar(names, values)
-    plt.title(f"{now.month}月度 参加ランキング")
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    await ctx.send(file=discord.File(buf, 'ranking.png'))
-    plt.close()
+    try:
+        now = datetime.datetime.now()
+        # ...集計処理...
+        if not top_10:
+            return await ctx.send("今月のデータがありません。")
+        
+        # グラフ作成処理
+        plt.figure(figsize=(8, 4))
+        plt.bar(names, values)
+        plt.title(f"{now.month}月度 参加ランキング")
+        
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        await ctx.send(file=discord.File(buf, 'ranking.png'))
+        plt.close()
+    except Exception as e:
+        bot_logger.error(f"ランキング生成エラー: {traceback.format_exc()}")
+        await ctx.send("ランキングの生成中にエラーが発生しました。")
  
 # ---- 起動時＆毎日AM0:00に初期メッセージを投稿するタスク ----
 @bot.event

@@ -56,7 +56,7 @@ fc-cache -fv
 ### 4. BOTトークンの記述
 ```bash
 `bot.py` の末尾にある `bot.run('YOUR_BOT_TOKEN')` の箇所に、
- ご自身のDiscord Botトークンを記述してください。
+ ご自身のDiscord BOTトークンを記述してください。
 ```
 ### 5. BOTの起動
 ```bash

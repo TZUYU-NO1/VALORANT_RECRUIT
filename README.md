@@ -47,16 +47,16 @@ unzip IPAexfont00301.zip
 mv IPAexfont00301 /usr/share/fonts/
 fc-cache -fv
 ```
-### 3. BOTトークンの記述
-```bash
-`bot.py` の末尾にある `bot.run('YOUR_BOT_TOKEN')` の箇所に、
- ご自身のDiscord Botトークンを記述してください。
-```
-### 4. チャンネルIDの記述
+### 3. チャンネルIDの記述
 ```bash
 `bot.py` の325行目にある `channel_ids = [テキストチャンネルIDを記載してください]` の箇所に、
  BOTで募集を行うテキストチャンネルのチャンネルIDを記述してください。
  記載例：`channel_ids = [1085856366276640848]`
+```
+### 4. BOTトークンの記述
+```bash
+`bot.py` の末尾にある `bot.run('YOUR_BOT_TOKEN')` の箇所に、
+ ご自身のDiscord Botトークンを記述してください。
 ```
 ### 5. BOTの起動
 ```bash

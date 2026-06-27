@@ -393,7 +393,6 @@ async def ranking(ctx):
     counts = Counter()
     log_path = os.path.join(DATA_DIR, 'participation_log.json')
     
-    # 1. ログファイルから集計
     if os.path.exists(log_path):
         with open(log_path, 'r', encoding='utf-8') as f:
             for line in f:
@@ -401,32 +400,39 @@ async def ranking(ctx):
                     d = json.loads(line)
                     if d.get('date', '').startswith(now.strftime("%Y-%m")):
                         counts[d['user']] += 1
-                except json.JSONDecodeError:
-                    continue  # 不正な行があればスキップ
+                except: continue
 
-    # 2. 変数の定義と検証
     top_10 = counts.most_common(10)
-    
-    if not top_10:
-        return await ctx.send("今月のデータがありません。")
+    if not top_10: return await ctx.send("今月のデータがありません。")
         
-    names, values = zip(*top_10)
+    usernames, values = zip(*top_10)
     
-    # 3. グラフ生成と送信
+    # 表示名の取得（サーバー内にいればニックネーム、いなければ記録された名前）
+    display_names = []
+    for uname in usernames:
+        member = discord.utils.get(ctx.guild.members, name=uname)
+        # ニックネームがあればニックネーム、なければ記録されているID/名前
+        display_names.append(member.display_name if member else uname)
+    
     try:
-        # フォントパスを直接指定
         font_path = '/usr/share/fonts/IPAexfont00301/ipaexg.ttf'
         font_prop = matplotlib.font_manager.FontProperties(fname=font_path)
         
-        plt.figure(figsize=(8, 4))
-        plt.bar(names, values)
+        # グラフのサイズを横長に設定
+        plt.figure(figsize=(14, 7))
+        plt.bar(display_names, values)
+        plt.title(f"{now.month}月度 参加ランキング", fontproperties=font_prop, fontsize=16)
         
-        # タイトルと軸ラベルにフォントを適用
-        plt.title(f"{now.month}月度 参加ランキング", fontproperties=font_prop)
-        plt.xticks(fontproperties=font_prop) # x軸のユーザー名用
+        # ラベルを「横方向（水平）」に近い角度で回転させ、重なりを防止
+        # rotation=30: 30度傾けることで文字間のスペースを確保
+        # ha='right': ラベルの端を基準に揃える
+        plt.xticks(rotation=30, ha='right', fontproperties=font_prop, fontsize=11)
+        
+        # 余白を自動調整
+        plt.tight_layout()
         
         buf = io.BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=100)
         buf.seek(0)
         
         await ctx.send(file=discord.File(buf, 'ranking.png'))

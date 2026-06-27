@@ -52,7 +52,7 @@ fc-cache -fv
 `bot.py` の末尾にある `bot.run('YOUR_BOT_TOKEN')` の箇所に、
  ご自身のDiscord Botトークンを記述してください。
 ```
-### 4. BOTトークンの記述
+### 4. チャンネルIDの記述
 ```bash
 `bot.py` の325行目にある `channel_ids = [テキストチャンネルIDを記載してください]` の箇所に、
  BOTで募集を行うテキストチャンネルのチャンネルIDを記述してください。
